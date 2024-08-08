@@ -72,7 +72,8 @@ export default function Signin() {
 
                 <div className="p-3 flex justify-around">
                     <div className="text-gray-700">
-                        Don't have an account?
+                     Don&#39;t have an account?
+
                     </div>
                     <button
                         onClick={() => router.push('/api/auth/signup')}

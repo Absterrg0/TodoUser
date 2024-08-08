@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { AxiosError } from 'axios'
 
 export default function Signup() {
     const [firstname, setFirstname] = useState("")
@@ -29,15 +30,17 @@ export default function Signup() {
                 router.push("/api/auth/signin?signup=success") // Redirect to sign-in page with query parameter
             }
         } catch (err) {
-            if (err.response && err.response.data) {
-                setError(err.response.data.error || "An error occurred")
-            } else {
-                setError("An unexpected error occurred")
-            }
+    if (err instanceof AxiosError) {  // Type guard
+        if (err.response && err.response.data) {
+            setError(err.response.data.error || "An error occurred");
+        } else {
+            setError("An unexpected error occurred");
         }
+    } else {
+        setError("An unexpected error occurred");
     }
-    
-
+}
+    }
     return (
         <div className="bg-slate-400 items-center min-h-screen flex justify-center">
             <div className="border rounded-md p-5 m-3 bg-slate-200">
