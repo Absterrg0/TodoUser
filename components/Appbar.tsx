@@ -22,7 +22,7 @@ export default function AppBar() {
         <div className="bg-slate-900 text-slate-200">
             <div className="flex justify-between items-center p-4">
                 <div className="text-2xl font-bold">
-                    Todo-Lister
+                    TaskMaster
                 </div>
                 <div className="flex items-center space-x-4">
                     {session ? (

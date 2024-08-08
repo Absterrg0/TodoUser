@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function Signin() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);  // State for handling errors
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -22,9 +23,8 @@ export default function Signin() {
             // Redirect to home page upon successful sign-in
             router.push('/');
         } else {
-            // Handle sign-in error (show message to user, etc.)
-            console.error(result?.error);
-            // Optionally show an error message to the user
+            // Handle sign-in error
+            setError(result?.error || "An unexpected error occurred");
         }
     };
 
@@ -57,6 +57,11 @@ export default function Signin() {
                         placeholder="Password"
                         required
                     />
+                    {error && (
+                        <div className="bg-red-500 text-white p-2 rounded-md mt-2">
+                            {error}
+                        </div>
+                    )}
                     <button
                         type="submit"  // Ensure button type is submit
                         className="flex justify-center bg-black text-white items-center p-3 w-full rounded-lg mt-7"

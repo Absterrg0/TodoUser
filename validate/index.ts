@@ -11,5 +11,5 @@ export const userSchema = z.object({
 export const todoSchema = z.object({
     title:z.string().min(1,"Title is required"),
     description:z.string().min(1,"Description is required"),
-    userid:z.number().int().positive()  
+    userid:z.string().min(1,"User id is required")
 })

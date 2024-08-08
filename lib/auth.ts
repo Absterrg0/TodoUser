@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import client from '@/db'; // Ensure this path is correct
 import bcrypt from 'bcrypt';
 
-export const authOptions: AuthOptions = {
+export const authValues: AuthOptions = {
     providers: [
         CredentialsProvider({
             name: 'Credentials',
@@ -15,23 +15,27 @@ export const authOptions: AuthOptions = {
                 if (!credentials?.username || !credentials?.password) {
                     throw new Error("Missing username or password");
                 }
-
+            
                 try {
+                    console.log("Attempting to find user with username:", credentials.username);
+            
                     const user = await client.user.findFirst({
                         where: {
                             username: credentials.username
                         }
                     });
-
+            
+                    console.log("User found:", user);
+            
                     if (!user) {
                         throw new Error("No user found with this username");
                     }
-
+            
                     const isValidPassword = await bcrypt.compare(credentials.password, user.password);
                     if (!isValidPassword) {
                         throw new Error("Invalid Password");
                     }
-
+            
                     return {
                         id: user.id.toString(),
                         firstname: user.firstname,
@@ -40,9 +44,10 @@ export const authOptions: AuthOptions = {
                     };
                 } catch (e) {
                     console.error(e);
-                    return null;
+                    throw new Error("An error occurred during authorization");
                 }
             }
+            
         })
     ],
     pages: {
@@ -65,10 +70,10 @@ export const authOptions: AuthOptions = {
         async session({ session, token }) {
             if (token) {
                 session.user = {
-                    id: token.id,
-                    firstname: token.firstname,
-                    lastname: token.lastname,
-                    username: token.username
+                    id: token.id as string,
+                    firstname: token.firstname as string,
+                    lastname: token.lastname as string,
+                    username: token.username as string
                 };
             }
             return session;
@@ -76,4 +81,4 @@ export const authOptions: AuthOptions = {
     }
 };
 
-export default authOptions;
+export default authValues;

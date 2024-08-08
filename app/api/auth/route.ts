@@ -1,37 +1,41 @@
-import client from '@/db'
-import bcrypt from 'bcrypt'
-import { NextRequest, NextResponse } from 'next/server';
-import { userSchema } from '@/validate';
-export async function POST(req:NextRequest){
+import { NextResponse } from 'next/server';
+import prisma from '@/db'; // Adjust this path as needed
+import bcrypt from 'bcrypt';
 
-    try{
-        const body = await req.json();
-        //validating zod schema
-        userSchema.parse(body);
-        //hashing the password using bcrypt
-        const hashedPassword = await bcrypt.hash(body.password,10)
-        const user = await client.user.create({
-            
-            data:{
-                firstname:body.firstname,
-                lastname:body.lastname,
-                username:body.username,
-                password:hashedPassword
-            }
-        })
-        return NextResponse.json({
-            msg:"User successfully created"
-        })
-    }catch(e:any){
-        console.error(e);
-        if(e.code == 'P2002'){
-            return NextResponse.json({
-                msg:"User already exists"
-            })
-        }
-        return NextResponse.json({
-            msg:"Error creating user"
-        })
+export async function POST(request: Request) {
+    const { firstname, lastname, username, password } = await request.json();
+
+    if (!firstname || !lastname || !username || !password) {
+        return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
     }
 
+    try {
+        // Check if user already exists
+        const existingUser = await prisma.user.findUnique({
+            where: { username }
+        });
+
+        if (existingUser) {
+            return NextResponse.json({ error: 'User already exists' }, { status: 400 });
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Create the new user
+        await prisma.user.create({
+            data: {
+                firstname,
+                lastname,
+                username,
+                password: hashedPassword
+            }
+        });
+
+        return NextResponse.json({ message: 'User created successfully' }, { status: 201 });
+
+    } catch (error) {
+        console.error(error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
 }

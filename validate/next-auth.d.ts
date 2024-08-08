@@ -1,6 +1,7 @@
 // types/next-auth.d.ts
 
 import { DefaultSession, DefaultUser } from "next-auth";
+import { JWT as NextAuthJWT } from "next-auth/jwt";
 
 // Extend the default User type
 declare module "next-auth" {
@@ -9,6 +10,7 @@ declare module "next-auth" {
         firstname: string;
         lastname: string;
         username: string;
+        isAdmin?: boolean; // Add isAdmin to User type
     }
 
     interface Session {
@@ -17,16 +19,18 @@ declare module "next-auth" {
             firstname: string;
             lastname: string;
             username: string;
+            isAdmin?: boolean; // Add isAdmin to Session user type
         } & DefaultSession["user"];
     }
 }
 
 // Extend JWT type
 declare module "next-auth/jwt" {
-    interface JWT {
+    interface JWT extends NextAuthJWT {
         id: string;
         firstname: string;
         lastname: string;
         username: string;
+        isAdmin?: boolean; // Add isAdmin to JWT type
     }
 }
