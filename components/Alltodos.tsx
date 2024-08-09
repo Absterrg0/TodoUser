@@ -34,7 +34,7 @@ export default function Alltodos() {
 
         fetchTodos();
 
-        const interval = setInterval(fetchTodos, 5000); // Poll every 5 seconds
+        const interval = setInterval(fetchTodos, 2000); // Poll every 5 seconds
         return () => clearInterval(interval);
     }, [status]);
 
