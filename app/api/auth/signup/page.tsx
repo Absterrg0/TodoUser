@@ -13,7 +13,7 @@ export default function Signup() {
     const router = useRouter()
 
     const handleAlready = () => {
-        router.push('/auth/signin')
+        router.push('/api/auth/signin')
     }
 
     const handleSignup = async () => {
