@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import client from '@/db'
 import { todoSchema } from "@/validate";
-import axios from 'axios'
 import { getServerSession } from "next-auth";
 import authOptions from "@/lib/auth";
 export async function GET(){
@@ -9,11 +8,9 @@ export async function GET(){
     if(!session?.user){
         return NextResponse.json({
             msg:"Unauthorized"
-        },
-        {
+        }, {
             status:401
-        }
-    )
+        });
     }
     const body = await client.todo.findMany({
         where:{
@@ -37,11 +34,9 @@ export async function POST(req:NextRequest){
     if(!session?.user){
         return NextResponse.json({
             msg:"Unauthorized"
-        },
-        {
+        }, {
             status:401
-        }
-    )
+        });
     }
 
     try{

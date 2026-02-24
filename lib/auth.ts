@@ -51,7 +51,7 @@ export const authValues: AuthOptions = {
         })
     ],
     pages: {
-        signIn: '/auth/signin' // Path to the custom sign-in page
+        signIn: '/api/auth/signin' // Path to the custom sign-in page
     },
     secret: process.env.NEXTAUTH_SECRET,
     session: {
